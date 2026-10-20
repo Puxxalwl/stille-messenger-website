@@ -2,6 +2,7 @@
   "name": "stille-im-website",
   "version": "1.0.0",
   "private": true,
+  "license": "AGPL-3.0-or-later",
   "type": "module",
   "scripts": {
     "dev": "astro dev --host 127.0.0.1",

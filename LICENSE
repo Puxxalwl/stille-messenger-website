@@ -1,0 +1,14 @@
+AGPL-3.0-or-later
+
+Copyright (c) 2026 puxxalwl, EryyynIT
+
+The Stille Messenger website and original files in this repository are
+licensed under the GNU Affero General Public License, version 3 or any
+later version. Copies, forks, modified versions, and redistributions of
+covered work must comply with that license and retain this copyright notice.
+
+Third-party dependencies and bundled third-party assets retain their own
+licenses. In particular, the Inter font is licensed under the SIL Open Font
+License 1.1; see public/fonts/OFL.txt. See NOTICE for attribution.
+
+The complete license text is provided in LICENSE-AGPL-3.0.txt.

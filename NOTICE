@@ -1,0 +1,23 @@
+Stille Messenger Website
+
+Copyright (c) 2026 puxxalwl, EryyynIT
+
+Original website code and illustrations are licensed under
+AGPL-3.0-or-later. Preserve the license and copyright notices when
+redistributing covered work, including modified versions.
+
+The supplied Stille logo assets originate from:
+  https://github.com/Puxxalwl/Stille-Messenger-Android
+Copyright (c) 2026 puxxalwl, EryyynIT
+See that project's license and notices. Optimized symbol and favicon
+variants in this repository are derived from those supplied assets.
+
+The bundled Inter font retains its SIL Open Font License 1.1.
+The font's copyright notice and complete license are in public/fonts/OFL.txt.
+
+Third-party software dependencies retain their respective upstream licenses.
+
+Related independent projects (their source code is not copied here):
+  Android: https://github.com/Puxxalwl/Stille-Messenger-Android
+  Linux:   https://github.com/EryyynIT/stille-messenger
+  Core:    https://github.com/Puxxalwl/stille-messenger-core
