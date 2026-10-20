@@ -22,6 +22,7 @@ test('indexable pages have canonicals and JSON-LD; invite routes stay noindex',a
    const jsonLd=html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)?.[1];expect(jsonLd).toBeTruthy();const data=JSON.parse(jsonLd!);expect(data['@context']).toBe('https://schema.org');expect(data['@graph'].some((item:{'@type':string})=>['WebPage','AboutPage'].includes(item['@type']))).toBe(true);
   }
   for(const route of ['/invite/','/invite/i/ProfileCode']){const response=await request.get(route);const html=await response.text();expect(html).toContain('name="robots" content="noindex, nofollow"');expect(html).not.toContain('application/ld+json');}
+  for(const route of ['/en/','/en/download/','/en/guide/','/en/about/']){const html=await (await request.get(route)).text();expect(html).toContain('lang="en"');expect(html).toContain('hreflang="en"');expect(html).toContain('type="application/ld+json"');}
   const robots=await (await request.get('/robots.txt')).text();expect(robots).toContain('Sitemap: https://stille.im/sitemap-index.xml');
   const index=await (await request.get('/sitemap-index.xml')).text();expect(index).toContain('<sitemapindex');expect(index).toContain('https://stille.im/sitemap.xml');
   const map=await (await request.get('/sitemap.xml')).text();expect(map).not.toContain('/invite/');

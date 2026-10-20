@@ -102,6 +102,8 @@ h3 { font-size: 20px; line-height: 1.35; letter-spacing: -.025em; }
 .site-header nav a { min-height: 44px; display: flex; align-items: center; font-size: 14px; text-decoration: none; }
 .site-header nav a[aria-current=page] { color: var(--blue-ink); text-decoration: underline; text-underline-offset: 8px; }
 .header-actions { display: flex; gap: 12px; align-items: center; }
+.language-switch { min-width: 32px; min-height: 44px; display: grid; place-items: center; color: var(--muted); font-size: 12px; font-weight: 600; text-decoration: none; letter-spacing: .04em; }
+.language-switch:hover { color: var(--text); }
 .theme-toggle { display: grid; place-items: center; width: 44px; height: 44px; color: var(--muted); background: transparent; border: 0; border-radius: 8px; }
 .theme-toggle:hover { background: var(--art); color: var(--text); }
 .mobile-menu { display: none; }

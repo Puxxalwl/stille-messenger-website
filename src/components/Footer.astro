@@ -1,8 +1,10 @@
 ---
 import { site } from '../lib/config';
+const english = Astro.url.pathname === '/en/' || Astro.url.pathname.startsWith('/en/');
+const home = english ? '/en/' : '/';
 ---
 <footer class="site-footer wrap">
-  <a href="/" class="footer-name">Stille<span>P2P-мессенджер для Android</span></a>
-  <nav aria-label="Дополнительная навигация"><a href="/guide/">Как начать</a><a href="/about/">О проекте</a><a href="/download/">Скачать</a><a href={site.android} rel="noreferrer">GitHub ↗</a><a href={`${site.android}/issues`} rel="noreferrer">Сообщить об ошибке ↗</a></nav>
-  <p class="footer-note">Без аналитики и рекламных трекеров. В браузере сохраняется только выбранная тема.</p>
+  <a href={home} class="footer-name">Stille<span>{english ? 'P2P messenger for Android' : 'P2P-мессенджер для Android'}</span></a>
+  <nav aria-label={english ? 'Footer navigation' : 'Дополнительная навигация'}>{english ? <><a href="/en/guide/">Getting started</a><a href="/en/about/">About</a><a href="/en/download/">Download</a></> : <><a href="/guide/">Как начать</a><a href="/about/">О проекте</a><a href="/download/">Скачать</a></>}<a href="https://github.com/Puxxalwl/stille-messenger-website/blob/main/LICENSE" rel="noreferrer">AGPL-3.0-or-later</a><a href={site.android} rel="noreferrer">GitHub ↗</a><a href="https://t.me/puxalwl" rel="noreferrer">{english ? 'Puxxalwl (@puxalwl) ↗' : 'Puxxalwl (@puxalwl) ↗'}</a><a href="https://t.me/eprintln" rel="noreferrer">{english ? 'EryynIT (@eprintln) ↗' : 'EryynIT (@eprintln) ↗'}</a></nav>
+  <p class="footer-note">{english ? 'No analytics or ad trackers. Only your selected theme is stored in the browser. AGPL-3.0-or-later · Puxxalwl · EryynIT.' : 'Без аналитики и рекламных трекеров. В браузере сохраняется только выбранная тема. AGPL-3.0-or-later · Puxxalwl · EryynIT.'}</p>
 </footer>

@@ -40,8 +40,12 @@ test('router reinitializes different invitations without leaking previous state'
 });
 
 test('all known routes return HTML 200 and navigation avoids hash routes',async({request,page})=>{
- for(const path of ['/','/guide/','/about/','/download/'])expect((await request.get(path)).status()).toBe(200);
+ for(const path of ['/','/guide/','/about/','/download/','/en/','/en/guide/','/en/about/','/en/download/'])expect((await request.get(path)).status()).toBe(200);
  await page.goto('/');expect(await page.locator('header a, footer a').evaluateAll(links=>links.some(a=>a.getAttribute('href')?.includes('#')))).toBe(false);
+});
+
+test('English pages and language switcher are available',async({page})=>{
+ await page.goto('/en/');await expect(page.locator('html')).toHaveAttribute('lang','en');await expect(page.locator('h1')).toContainText('Conversations');await expect(page.locator('.language-switch')).toHaveText('RU');await page.locator('.language-switch').click();await expect(page).toHaveURL(/\/$/);await expect(page.locator('html')).toHaveAttribute('lang','ru');await expect(page.locator('h1')).toContainText('Разговоры');
 });
 
 test('menu works without JavaScript',async({browser})=>{

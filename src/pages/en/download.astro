@@ -1,0 +1,16 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import PageIntro from '../../components/PageIntro.astro';
+import { site } from '../../lib/config';
+---
+<Layout lang="en" title="Download Stille for Android" description="Download the Stille Android APK. Find requirements, installation instructions and release updates." canonical="/en/download/">
+<Header />
+<main id="main" tabindex="-1" class="document-page wrap">
+  <PageIntro label="Download" title="Stille for Android" description="The app is distributed through GitHub Releases. Download the APK and install it on your phone." />
+  <section class="release-block" aria-labelledby="release-heading"><div><h2 id="release-heading">Version {site.version}</h2><p>Android 8.0 or later · APK · Free</p><p class="small-copy">The current Android client targets arm64. Check device compatibility before installing.</p></div><div class="release-actions"><a class="button" href={site.apk}>Download APK <span aria-hidden="true">↓</span></a><a href={`${site.android}/releases`} rel="noreferrer">All releases and notes ↗</a></div></section>
+  <div class="document-grid"><section class="prose" aria-labelledby="install-heading"><h2 id="install-heading">Install</h2><ol class="instructions"><li><strong>Download the APK</strong><p>Use the button above. The file is hosted by the official Stille repository.</p></li><li><strong>Allow installation</strong><p>Open the file. If Android asks, allow your browser to install apps from this source. The setting name varies by Android version.</p></li><li><strong>Open Stille</strong><p>Choose a name, language and theme, then exchange an invite.</p></li></ol><a class="text-link" href="/en/guide/">Read the getting-started guide →</a></section><aside class="side-note"><h3>Check the source</h3><p>Download from the project repository. Avoid APKs from random messages or mirrors.</p><p>The page lists a verified release and does not promise it is always the latest. See GitHub Releases for the release history.</p></aside></div>
+  <section class="prose document-section" aria-labelledby="updates-heading"><h2 id="updates-heading">Updates</h2><p>The app can check GitHub Releases for updates. Automatic checks can be disabled in settings; manual checks remain available in the About section.</p><p>Do not uninstall the app or clear its data to troubleshoot updates: this may remove your local identity and conversations. If signature verification fails, check the release notes and report the issue.</p><a href={`${site.android}/issues`} rel="noreferrer">Report an installation issue ↗</a></section>
+</main><Footer />
+</Layout>

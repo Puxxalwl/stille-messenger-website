@@ -1,21 +1,25 @@
 ---
 import '../styles/global.css';
 import { ClientRouter } from 'astro:transitions';
-interface Props { title?: string; description?: string; noindex?: boolean; canonical?: string; image?: string }
-const { title = 'Stille — мессенджер без номера телефона', description = 'P2P-мессенджер для Android. Выберите имя, обменяйтесь приглашением и начните разговор. Открытый код, без номера телефона.', noindex = false, canonical = '/', image = '/assets/og-home.png' } = Astro.props;
+interface Props { title?: string; description?: string; noindex?: boolean; canonical?: string; image?: string; lang?: 'ru' | 'en' }
+const { title = 'Stille — мессенджер без номера телефона', description = 'P2P-мессенджер для Android. Выберите имя, обменяйтесь приглашением и начните разговор. Открытый код, без номера телефона.', noindex = false, canonical = '/', image = '/assets/og-home.png', lang = 'ru' } = Astro.props;
 const canonicalUrl = new URL(canonical, Astro.site).toString();
+const counterpartPath = lang === 'en' ? canonical.replace(/^\/en(?=\/|$)/, '') || '/' : `/en${canonical === '/' ? '/' : canonical}`;
+const counterpartUrl = new URL(counterpartPath, Astro.site).toString();
+const languageHomeUrl = new URL('/', Astro.site).toString();
 const indexable = !noindex;
 const breadcrumbs = canonical === '/' ? [] : [{ '@type': 'ListItem', position: 1, name: 'Stille', item: new URL('/', Astro.site).toString() }, { '@type': 'ListItem', position: 2, name: title.replace(/ — Stille$/, ''), item: canonicalUrl }];
 const schemas = indexable ? [
-  { '@type': 'WebSite', '@id': `${new URL('/', Astro.site).toString()}#website`, url: new URL('/', Astro.site).toString(), name: 'Stille', inLanguage: 'ru-RU' },
-  { '@type': canonical === '/about/' ? 'AboutPage' : 'WebPage', '@id': `${canonicalUrl}#page`, url: canonicalUrl, name: title, description, inLanguage: 'ru-RU', isPartOf: { '@id': `${new URL('/', Astro.site).toString()}#website` } },
-  ...(canonical === '/' ? [{ '@type': 'SoftwareApplication', name: 'Stille', applicationCategory: 'CommunicationApplication', operatingSystem: 'Android', description, url: canonicalUrl, downloadUrl: new URL('/download/', Astro.site).toString(), image: new URL(image, Astro.site).toString(), offers: { '@type': 'Offer', price: '0', priceCurrency: 'RUB' } }] : []),
-  ...(canonical === '/about/' ? [{ '@type': 'Organization', name: 'Stille Messenger', url: canonicalUrl, sameAs: ['https://github.com/Puxxalwl/Stille-Messenger-Android', 'https://github.com/puxxalwl/stille-messenger-core', 'https://github.com/EryyynIT/stille-messenger'] }] : []),
+  { '@type': 'WebSite', '@id': `${new URL('/', Astro.site).toString()}#website`, url: new URL('/', Astro.site).toString(), name: 'Stille', inLanguage: lang === 'en' ? 'en' : 'ru-RU', publisher: { '@id': `${new URL('/about/', Astro.site).toString()}#publisher` } },
+  { '@type': canonical.endsWith('/about/') ? 'AboutPage' : 'WebPage', '@id': `${canonicalUrl}#page`, url: canonicalUrl, name: title, description, inLanguage: lang === 'en' ? 'en' : 'ru-RU', isPartOf: { '@id': `${new URL('/', Astro.site).toString()}#website` }, publisher: { '@id': `${new URL('/about/', Astro.site).toString()}#publisher` } },
+  { '@type': 'Organization', '@id': `${new URL('/about/', Astro.site).toString()}#publisher`, name: 'Stille Messenger', url: new URL('/about/', Astro.site).toString(), founder: [{ '@type': 'Person', name: 'Puxxalwl', sameAs: 'https://t.me/puxalwl' }, { '@type': 'Person', name: 'EryynIT', sameAs: 'https://t.me/eprintln' }], sameAs: ['https://t.me/puxalwl', 'https://t.me/eprintln', 'https://github.com/Puxxalwl/stille-messenger-website'] },
+  ...(canonical === '/' || canonical === '/en/' ? [{ '@type': 'SoftwareApplication', name: 'Stille', applicationCategory: 'CommunicationApplication', operatingSystem: 'Android', description, url: canonicalUrl, downloadUrl: new URL(lang === 'en' ? '/en/download/' : '/download/', Astro.site).toString(), image: new URL(image, Astro.site).toString(), offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } }] : []),
+  ...(canonical.endsWith('/about/') ? [{ '@type': 'SoftwareSourceCode', name: 'Stille Messenger Website', codeRepository: 'https://github.com/Puxxalwl/stille-messenger-website', license: 'https://github.com/Puxxalwl/stille-messenger-website/blob/main/LICENSE' }] : []),
   ...(breadcrumbs.length ? [{ '@type': 'BreadcrumbList', itemListElement: breadcrumbs }] : [])
 ] : [];
 ---
 <!doctype html>
-<html lang="ru">
+<html lang={lang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -25,11 +29,15 @@ const schemas = indexable ? [
     <meta name="robots" content={indexable ? 'index, follow, max-image-preview:large' : 'noindex, nofollow'} />
     <meta name="googlebot" content={indexable ? 'index, follow, max-image-preview:large' : 'noindex, nofollow'} />
     <link rel="canonical" href={canonicalUrl} />
+    <link rel="alternate" hreflang={lang} href={canonicalUrl} />
+    <link rel="alternate" hreflang={lang === 'ru' ? 'en' : 'ru'} href={counterpartUrl} />
+    <link rel="alternate" hreflang="x-default" href={languageHomeUrl} />
     <link rel="sitemap" type="application/xml" href="/sitemap-index.xml" />
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png" />
     <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
     <meta property="og:type" content="website" />
-    <meta property="og:locale" content="ru_RU" />
+    <meta property="og:locale" content={lang === 'en' ? 'en_US' : 'ru_RU'} />
+    <meta property="og:locale:alternate" content={lang === 'en' ? 'ru_RU' : 'en_US'} />
     <meta property="og:site_name" content="Stille" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />

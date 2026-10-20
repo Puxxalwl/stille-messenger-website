@@ -1,13 +1,19 @@
 ---
-const links = [{ href: '/guide/', label: 'Как начать' }, { href: '/about/', label: 'О проекте' }, { href: '/download/', label: 'Скачать' }];
+const english = Astro.url.pathname === '/en/' || Astro.url.pathname.startsWith('/en/');
 const path = Astro.url.pathname;
+const links = english
+  ? [{ href: '/en/guide/', label: 'Getting started' }, { href: '/en/about/', label: 'About' }, { href: '/en/download/', label: 'Download' }]
+  : [{ href: '/guide/', label: 'Как начать' }, { href: '/about/', label: 'О проекте' }, { href: '/download/', label: 'Скачать' }];
+const home = english ? '/en/' : '/';
+const counterpart = path.startsWith('/invite/') ? (english ? '/' : '/en/') : english ? path.replace(/^\/en(?=\/|$)/, '') || '/' : `/en${path === '/' ? '/' : path}`;
 ---
 <header class="site-header wrap">
-  <a href="/" class="brand" aria-label="Stille — на главную"><img src="/assets/logo.webp" width="25" height="36" alt="" /><span>Stille</span></a>
-  <nav class="desktop-nav" aria-label="Основная навигация">{links.map(link => <a href={link.href} aria-current={path === link.href ? 'page' : undefined}>{link.label}</a>)}</nav>
+  <a href={home} class="brand" aria-label={english ? 'Stille — home' : 'Stille — на главную'}><img src="/assets/logo.webp" width="25" height="36" alt="" /><span>Stille</span></a>
+  <nav class="desktop-nav" aria-label={english ? 'Main navigation' : 'Основная навигация'}>{links.map(link => <a href={link.href} aria-current={path === link.href ? 'page' : undefined}>{link.label}</a>)}</nav>
   <div class="header-actions">
-    <button class="theme-toggle" type="button" aria-label="Переключить цветовую тему" hidden><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M20.5 13A8.5 8.5 0 0 1 11 3.5 8.5 8.5 0 1 0 20.5 13Z" /></svg></button>
-    <details class="mobile-menu"><summary>Меню <span aria-hidden="true">☰</span></summary><nav aria-label="Мобильная навигация">{links.map(link => <a href={link.href} aria-current={path === link.href ? 'page' : undefined}>{link.label}</a>)}</nav></details>
+    <a class="language-switch" href={counterpart} lang={english ? 'ru' : 'en'} aria-label={english ? 'Переключить на русский' : 'Switch to English'}>{english ? 'RU' : 'EN'}</a>
+    <button class="theme-toggle" type="button" aria-label={english ? 'Toggle color theme' : 'Переключить цветовую тему'} hidden><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M20.5 13A8.5 8.5 0 0 1 11 3.5 8.5 8.5 0 1 0 20.5 13Z" /></svg></button>
+    <details class="mobile-menu"><summary>{english ? 'Menu' : 'Меню'} <span aria-hidden="true">☰</span></summary><nav aria-label={english ? 'Mobile navigation' : 'Мобильная навигация'}>{links.map(link => <a href={link.href} aria-current={path === link.href ? 'page' : undefined}>{link.label}</a>)}</nav></details>
   </div>
 </header>
 <script>
@@ -17,7 +23,8 @@ const path = Astro.url.pathname;
     toggle.dataset.ready = 'true'; toggle.hidden = false;
     const media = matchMedia('(prefers-color-scheme: dark)');
     const isDark = () => document.documentElement.dataset.theme ? document.documentElement.dataset.theme === 'dark' : media.matches;
-    const label = () => toggle.setAttribute('aria-label', isDark() ? 'Включить светлую тему' : 'Включить тёмную тему');
+    const english = location.pathname === '/en/' || location.pathname.startsWith('/en/');
+    const label = () => toggle.setAttribute('aria-label', english ? (isDark() ? 'Switch to light theme' : 'Switch to dark theme') : (isDark() ? 'Включить светлую тему' : 'Включить тёмную тему'));
     label(); media.addEventListener('change', label);
     toggle.addEventListener('click', () => {
       const theme = isDark() ? 'light' : 'dark'; document.documentElement.dataset.theme = theme;

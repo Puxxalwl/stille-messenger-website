@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://stille.im/</loc></url>
-  <url><loc>https://stille.im/download/</loc></url>
-  <url><loc>https://stille.im/guide/</loc></url>
-  <url><loc>https://stille.im/about/</loc></url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url><loc>https://stille.im/</loc><xhtml:link rel="alternate" hreflang="ru" href="https://stille.im/"/><xhtml:link rel="alternate" hreflang="en" href="https://stille.im/en/"/><xhtml:link rel="alternate" hreflang="x-default" href="https://stille.im/"/></url>
+  <url><loc>https://stille.im/download/</loc><xhtml:link rel="alternate" hreflang="ru" href="https://stille.im/download/"/><xhtml:link rel="alternate" hreflang="en" href="https://stille.im/en/download/"/></url>
+  <url><loc>https://stille.im/guide/</loc><xhtml:link rel="alternate" hreflang="ru" href="https://stille.im/guide/"/><xhtml:link rel="alternate" hreflang="en" href="https://stille.im/en/guide/"/></url>
+  <url><loc>https://stille.im/about/</loc><xhtml:link rel="alternate" hreflang="ru" href="https://stille.im/about/"/><xhtml:link rel="alternate" hreflang="en" href="https://stille.im/en/about/"/><xhtml:link rel="alternate" hreflang="x-default" href="https://stille.im/about/"/></url>
+  <url><loc>https://stille.im/en/</loc><xhtml:link rel="alternate" hreflang="ru" href="https://stille.im/"/><xhtml:link rel="alternate" hreflang="en" href="https://stille.im/en/"/><xhtml:link rel="alternate" hreflang="x-default" href="https://stille.im/"/></url>
+  <url><loc>https://stille.im/en/download/</loc><xhtml:link rel="alternate" hreflang="ru" href="https://stille.im/download/"/><xhtml:link rel="alternate" hreflang="en" href="https://stille.im/en/download/"/></url>
+  <url><loc>https://stille.im/en/guide/</loc><xhtml:link rel="alternate" hreflang="ru" href="https://stille.im/guide/"/><xhtml:link rel="alternate" hreflang="en" href="https://stille.im/en/guide/"/></url>
+  <url><loc>https://stille.im/en/about/</loc><xhtml:link rel="alternate" hreflang="ru" href="https://stille.im/about/"/><xhtml:link rel="alternate" hreflang="en" href="https://stille.im/en/about/"/></url>
 </urlset>
