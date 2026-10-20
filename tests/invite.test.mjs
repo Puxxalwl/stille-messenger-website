@@ -7,6 +7,7 @@ test('opaque suffix preserves case and URI-safe material', () => {
  const r = parseInvitePath('/invite/AbC123_-~.+=');
  assert.equal(r.kind, 'valid'); assert.equal(r.uri, 'stille://i/AbC123_-~.+=');
  assert.equal(parseInvitePath('/invite/ABC%2Bdef%3D').uri, 'stille://i/ABC+def=');
+ assert.equal(parseInvitePath('/invite/i/ABC%2Bdef%3D').uri, 'stille://i/ABC+def=');
  assert.equal(inviteWebUrl('AbC+def='), 'https://stille.im/invite/AbC%2Bdef%3D');
 });
 test('help and missing routes remain distinct', () => {

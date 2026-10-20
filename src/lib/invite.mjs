@@ -7,7 +7,10 @@ export function parseInvitePath(pathname) {
   if (typeof pathname !== 'string') return { kind: 'missing' };
   if (pathname === '/invite' || pathname === '/invite/') return { kind: 'help' };
   if (!pathname.startsWith('/invite/')) return { kind: 'missing' };
-  const suffix = pathname.slice('/invite/'.length);
+  let suffix = pathname.slice('/invite/'.length);
+  // Accept both /invite/{code} and /invite/i/{code}; the latter mirrors
+  // the Android stille://i/{code} namespace while keeping the same payload.
+  if (suffix.startsWith('i/')) suffix = suffix.slice(2);
   if (!suffix || suffix.includes('/') || suffix.length > MAX_INVITE_BYTES * 3) return { kind: 'invalid' };
   let code;
   try { code = decodeURIComponent(suffix); } catch { return { kind: 'invalid' }; }

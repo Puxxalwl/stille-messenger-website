@@ -20,19 +20,19 @@ test('invitation direct load is a real 404, opens app link, QR fallback works',a
  await expect(page.getByRole('heading',{level:1})).toHaveText('Вас пригласили в Stille');await expect(page.locator('#qr-canvas')).toBeVisible();
  const qr = await page.locator('#qr-canvas').evaluate(c=>{const canvas=c as HTMLCanvasElement;return {width:canvas.width,height:canvas.height,pixels:Array.from(canvas.getContext('2d')!.getImageData(0,0,canvas.width,canvas.height).data)};});
  const {default:jsQR}=await import('jsqr');expect(jsQR(new Uint8ClampedArray(qr.pixels),qr.width,qr.height)?.data).toBe('stille://i/AbC+def=');
- await expect(page.locator('#open-invite')).toHaveAttribute('href',/\/invite\/AbC%2Bdef%3D/);await expect(page.locator('#open-invite')).toBeVisible();expect(external).toEqual([]);
+ await expect(page.locator('#open-invite')).toHaveCount(0);expect(external).toEqual([]);
  await page.screenshot({path:'test-results/invite.png',fullPage:true});
 });
 test('HTTPS invite has no copy control',async({page})=>{
- await page.goto('/invite/AbC123');await expect(page.locator('#copy-invite')).toHaveCount(0);await expect(page.locator('#open-invite')).toBeVisible();
+ await page.goto('/invite/AbC123');await expect(page.locator('#copy-invite')).toHaveCount(0);await expect(page.locator('#open-invite')).toHaveCount(0);
 });
 test('invalid and missing URLs never expose actions',async({page})=>{
- for(const path of ['/invite/%3Cscript%3E','/invite/a/b','/invite/%FF']){await page.goto(path);await expect(page.getByRole('heading',{level:1})).toHaveText('В ссылке что-то не так');await expect(page.locator('#invite-actions')).toBeHidden();}
+ for(const path of ['/invite/%3Cscript%3E','/invite/a/b','/invite/%FF']){await page.goto(path);await expect(page.getByRole('heading',{level:1})).toHaveText('В ссылке что-то не так');await expect(page.locator('#open-invite')).toHaveCount(0);}
  await page.goto('/not-a-page');await expect(page.getByRole('heading',{level:1})).toHaveText('Здесь пока тихо');
  await page.goto('/invite/');await expect(page.getByRole('heading',{level:1})).toHaveText('Позовите своего человека');
 });
 test('long invitation retains copy without QR',async({page})=>{
- await page.goto('/invite/'+'a'.repeat(901));await expect(page.getByRole('status')).toContainText('слишком длинное');await expect(page.locator('#invite-qr')).toBeHidden();await expect(page.locator('#open-invite')).toBeVisible();
+ await page.goto('/invite/'+'a'.repeat(901));await expect(page.getByRole('status')).toContainText('слишком длинное');await expect(page.locator('#invite-qr')).toBeHidden();await expect(page.locator('#open-invite')).toHaveCount(0);
 });
 test('no JavaScript: content and manual instructions remain available',async({browser})=>{
  const context=await browser.newContext({javaScriptEnabled:false});const page=await context.newPage();await page.goto('/');await expect(page.getByRole('heading',{level:1})).toContainText('Разговоры');await expect(page.getByRole('button')).toHaveCount(0);

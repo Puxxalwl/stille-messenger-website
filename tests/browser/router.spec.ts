@@ -35,8 +35,8 @@ test('router reinitializes different invitations without leaking previous state'
  await context.grantPermissions(['clipboard-read','clipboard-write']);await page.goto('/invite/FirstCode');
  await expect(page.locator('#qr-canvas')).toBeVisible();
  await page.locator('.brand').click();await expect(page.locator('h1')).toContainText('Разговоры');
- await page.goBack();await expect(page.locator('#open-invite')).toBeVisible();
- await page.goto('/invite/SecondCode');await expect(page.locator('#open-invite')).toBeVisible();
+ await page.goBack();await expect(page.locator('#invite-qr')).toBeVisible();
+ await page.goto('/invite/SecondCode');await expect(page.locator('#invite-qr')).toBeVisible();
 });
 
 test('all known routes return HTML 200 and navigation avoids hash routes',async({request,page})=>{

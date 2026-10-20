@@ -6,7 +6,6 @@ import { site } from '../lib/config';
   <p class="eyebrow">ОДИН ЧЕЛОВЕК. ОДНО ПРИГЛАШЕНИЕ.</p>
   <h1 id="invite-title">Вас пригласили в Stille</h1>
   <p id="invite-description">Хороший разговор начинается с «привет». Откройте приглашение в приложении.</p>
-  <div class="invite-actions" id="invite-actions" hidden><a id="open-invite" class="button" hidden>Открыть Stille ↗</a></div>
   <p class="invite-status" id="invite-status" role="status" aria-live="polite"></p>
   <div id="manual-copy-wrap" hidden><label class="manual-label" for="manual-copy">Выделите и скопируйте приглашение вручную</label><textarea class="manual-copy" id="manual-copy" readonly spellcheck="false" autocomplete="off"></textarea></div>
   <div class="invite-instructions" id="invite-instructions"><strong>Как открыть приглашение</strong><ol><li>Нажмите «Открыть Stille».</li><li>Если приложение не открылось, установите или обновите Stille.</li><li>Затем вернитесь к этой странице и считайте QR встроенным сканером.</li></ol></div>
@@ -30,11 +29,19 @@ import { site } from '../lib/config';
   if (result.kind === 'valid' && result.uri) {
     const uri = result.uri;
     document.title = 'Вас пригласили в Stille';
-    document.querySelector<HTMLElement>('#invite-actions')!.hidden = false;
-    const open = document.querySelector<HTMLAnchorElement>('#open-invite')!;
     if (view.dataset.deepLinks === 'true') {
-      open.href = window.location.href; open.hidden = false;
-      document.querySelector<HTMLElement>('#invite-privacy')!.textContent = 'Откройте HTTPS-ссылку в совместимой версии Stille. Если приложение ещё не установлено, используйте QR с полным stille://-кодом во встроенном сканере.';
+      document.querySelector<HTMLElement>('#invite-privacy')!.textContent = 'Если Stille установлено, Android автоматически передаст ссылку приложению. Если приложение не открылось, используйте QR с полным stille://-кодом во встроенном сканере.';
+      // Android App Links open this HTTPS URL directly when assetlinks.json and
+      // the installed release certificate are configured. The page remains a
+      // useful fallback on desktop and on Android without the app.
+      if (/Android/i.test(navigator.userAgent)) {
+        window.setTimeout(() => {
+          if (document.visibilityState === 'visible' && view.isConnected) {
+            const intent = `intent://${window.location.host}${window.location.pathname}#Intent;scheme=https;package=com.stille.messenger;end`;
+            window.location.href = intent;
+          }
+        }, 120);
+      }
     }
     if (result.qrAllowed) {
       import('qrcode').then(async (QRCode) => {
