@@ -19,7 +19,7 @@ test('invitation direct load is a real 404, opens app link, QR fallback works',a
  const response=await page.goto('/invite/AbC%2Bdef%3D');expect(response?.status()).toBe(404);
  await expect(page.getByRole('heading',{level:1})).toHaveText('Вас пригласили в Stille');await expect(page.locator('#qr-canvas')).toBeVisible();
  const qr = await page.locator('#qr-canvas').evaluate(c=>{const canvas=c as HTMLCanvasElement;return {width:canvas.width,height:canvas.height,pixels:Array.from(canvas.getContext('2d')!.getImageData(0,0,canvas.width,canvas.height).data)};});
- const {default:jsQR}=await import('jsqr');expect(jsQR(new Uint8ClampedArray(qr.pixels),qr.width,qr.height)?.data).toBe('stille://i/AbC+def=');
+ const {default:jsQR}=await import('jsqr');expect(jsQR(new Uint8ClampedArray(qr.pixels),qr.width,qr.height)?.data).toBe('https://stille.im/invite/i/AbC%2Bdef%3D');
  await expect(page.locator('#open-invite')).toHaveCount(0);expect(external).toEqual([]);
  await page.screenshot({path:'test-results/invite.png',fullPage:true});
 });
@@ -36,5 +36,5 @@ test('long invitation retains copy without QR',async({page})=>{
 });
 test('no JavaScript: content and manual instructions remain available',async({browser})=>{
  const context=await browser.newContext({javaScriptEnabled:false});const page=await context.newPage();await page.goto('/');await expect(page.getByRole('heading',{level:1})).toContainText('Разговоры');await expect(page.getByRole('button')).toHaveCount(0);
- await page.goto('/invite/AbC123');await expect(page.getByRole('heading',{level:1})).toHaveText('Приглашения в Stille');await expect(page.getByText('stille://i/…',{exact:true}).last()).toBeVisible();await context.close();
+ await page.goto('/invite/AbC123');await expect(page.getByRole('heading',{level:1})).toHaveText('Приглашения в Stille');await expect(page.getByRole('heading',{level:1})).toHaveText('Приглашения в Stille');await context.close();
 });

@@ -8,18 +8,21 @@ export function parseInvitePath(pathname) {
   if (pathname === '/invite' || pathname === '/invite/') return { kind: 'help' };
   if (!pathname.startsWith('/invite/')) return { kind: 'missing' };
   let suffix = pathname.slice('/invite/'.length);
-  // Accept both /invite/{code} and /invite/i/{code}; the latter mirrors
-  // the Android stille://i/{code} namespace while keeping the same payload.
-  if (suffix.startsWith('i/')) suffix = suffix.slice(2);
+  let namespace = 'i';
+  // Persistent profile links carry the Android namespace in the web path.
+  // Legacy /invite/{code} remains the one-time invite format.
+  if (suffix.startsWith('i3/')) { namespace = 'i3'; suffix = suffix.slice(3); }
+  else if (suffix.startsWith('i/')) suffix = suffix.slice(2);
   if (!suffix || suffix.includes('/') || suffix.length > MAX_INVITE_BYTES * 3) return { kind: 'invalid' };
   let code;
   try { code = decodeURIComponent(suffix); } catch { return { kind: 'invalid' }; }
   // Match URI-safe invite material without assuming a particular core payload format.
   // Reject URL separators, whitespace, controls, markup, nested percent encoding.
   if (!code || /[\s\u0000-\u001f\u007f-\u009f/%\\?#<>"'`:]/u.test(code)) return { kind: 'invalid' };
-  const uri = `stille://i/${code}`;
+  const uri = `stille://${namespace}/${code}`;
+  const webUrl = `https://stille.im/invite/${namespace}/${encodeURIComponent(code)}`;
   if (byteLength(uri) > MAX_INVITE_BYTES) return { kind: 'invalid' };
-  return { kind: 'valid', code, uri, qrAllowed: byteLength(uri) <= MAX_QR_BYTES };
+  return { kind: 'valid', code, namespace, uri, webUrl, qrAllowed: byteLength(webUrl) <= MAX_QR_BYTES };
 }
 
 export function inviteWebUrl(code) {

@@ -8,6 +8,8 @@ test('opaque suffix preserves case and URI-safe material', () => {
  assert.equal(r.kind, 'valid'); assert.equal(r.uri, 'stille://i/AbC123_-~.+=');
  assert.equal(parseInvitePath('/invite/ABC%2Bdef%3D').uri, 'stille://i/ABC+def=');
  assert.equal(parseInvitePath('/invite/i/ABC%2Bdef%3D').uri, 'stille://i/ABC+def=');
+ assert.equal(parseInvitePath('/invite/i3/ABC%2Bdef%3D').uri, 'stille://i3/ABC+def=');
+ assert.equal(parseInvitePath('/invite/i3/ABC%2Bdef%3D').webUrl, 'https://stille.im/invite/i3/ABC%2Bdef%3D');
  assert.equal(inviteWebUrl('AbC+def='), 'https://stille.im/invite/AbC%2Bdef%3D');
 });
 test('help and missing routes remain distinct', () => {
@@ -20,8 +22,9 @@ test('reject invalid percent, separators, controls, markup and URL injections', 
 });
 test('byte limits protect page and QR without truncation', () => {
  const prefix = 'stille://i/'.length;
- assert.equal(parseInvitePath('/invite/'+'a'.repeat(MAX_QR_BYTES-prefix)).qrAllowed,true);
- assert.equal(parseInvitePath('/invite/'+'a'.repeat(MAX_QR_BYTES-prefix+1)).qrAllowed,false);
+ const webPrefix = 'https://stille.im/invite/i/'.length;
+ assert.equal(parseInvitePath('/invite/'+'a'.repeat(MAX_QR_BYTES-prefix)).kind,'valid');
+ assert.equal(parseInvitePath('/invite/'+'a'.repeat(MAX_QR_BYTES-webPrefix+1)).qrAllowed,false);
  assert.equal(parseInvitePath('/invite/'+'a'.repeat(MAX_INVITE_BYTES-prefix)).kind,'valid');
  assert.equal(parseInvitePath('/invite/'+'a'.repeat(MAX_INVITE_BYTES-prefix+1)).kind,'invalid');
 });

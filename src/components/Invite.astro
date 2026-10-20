@@ -8,13 +8,13 @@ import { site } from '../lib/config';
   <p id="invite-description">Хороший разговор начинается с «привет». Откройте приглашение в приложении.</p>
   <p class="invite-status" id="invite-status" role="status" aria-live="polite"></p>
   <div id="manual-copy-wrap" hidden><label class="manual-label" for="manual-copy">Выделите и скопируйте приглашение вручную</label><textarea class="manual-copy" id="manual-copy" readonly spellcheck="false" autocomplete="off"></textarea></div>
-  <div class="invite-instructions" id="invite-instructions"><strong>Как открыть приглашение</strong><ol><li>Нажмите «Открыть Stille».</li><li>Если приложение не открылось, установите или обновите Stille.</li><li>Затем вернитесь к этой странице и считайте QR встроенным сканером.</li></ol></div>
+  <div class="invite-instructions" id="invite-instructions"><strong>Как открыть приглашение</strong><ol><li>Откройте эту HTTPS-ссылку на Android с установленным Stille.</li><li>Android передаст полный код приложению автоматически.</li><li>Если приложение не открылось, считайте QR встроенным сканером Stille.</li></ol></div>
   <div class="invite-qr" id="invite-qr" hidden><canvas id="qr-canvas" aria-label="QR приглашения для сканера Stille" role="img"></canvas><p>Откройте сканер в Stille на телефоне.<br/>Не отправляйте этот QR посторонним.</p></div>
   <p class="invite-download">Ещё нет приложения? <a href={site.apk}>Скачать для Android · v{site.version} ↓</a></p>
-  <p class="invite-privacy" id="invite-privacy">Сайт не сохраняет и не проверяет приглашение. При необходимости используйте QR с полным кодом <code>stille://i/…</code> во встроенном сканере Stille.</p>
+  <p class="invite-privacy" id="invite-privacy">Сайт не сохраняет и не проверяет приглашение. QR содержит эту же полную HTTPS-ссылку.</p>
   <a class="invite-general-link" href="/">Что такое Stille ↗</a>
 </div>
-<noscript><div class="invite-card"><img src="/assets/owl-invite.svg" width="160" height="150" alt="Сова с приглашением"/><h1>Приглашения в Stille</h1><p>Откройте эту HTTPS-ссылку в установленном приложении Stille. Если приложение не установлено, скачайте его, затем используйте QR с полным кодом <code>stille://i/…</code> во встроенном сканере.</p><p>Если в адресе нет кода, попросите друга прислать полную ссылку.</p><p><a href={site.apk}>Скачать Stille для Android</a> · <a href="/">На главную</a></p></div></noscript>
+<noscript><div class="invite-card"><img src="/assets/owl-invite.svg" width="160" height="150" alt="Сова с приглашением"/><h1>Приглашения в Stille</h1><p>Откройте эту HTTPS-ссылку в установленном приложении Stille. Если приложение не установлено, скачайте его, затем используйте QR с полной HTTPS-ссылкой во встроенном сканере.</p><p>Если в адресе нет кода, попросите друга прислать полную ссылку.</p><p><a href={site.apk}>Скачать Stille для Android</a> · <a href="/">На главную</a></p></div></noscript>
 <script>
   import { parseInvitePath } from '../lib/invite.mjs';
   function setupInvite() {
@@ -27,10 +27,9 @@ import { site } from '../lib/config';
   const result = parseInvitePath(window.location.pathname);
   view.hidden = false;
   if (result.kind === 'valid' && result.uri) {
-    const uri = result.uri;
     document.title = 'Вас пригласили в Stille';
     if (view.dataset.deepLinks === 'true') {
-      document.querySelector<HTMLElement>('#invite-privacy')!.textContent = 'Если Stille установлено, Android автоматически передаст ссылку приложению. Если приложение не открылось, используйте QR с полным stille://-кодом во встроенном сканере.';
+      document.querySelector<HTMLElement>('#invite-privacy')!.textContent = 'Если Stille установлено, Android автоматически передаст ссылку приложению. Если приложение не открылось, используйте QR с полной HTTPS-ссылкой во встроенном сканере.';
       // Android App Links open this HTTPS URL directly when assetlinks.json and
       // the installed release certificate are configured. The page remains a
       // useful fallback on desktop and on Android without the app.
@@ -47,7 +46,7 @@ import { site } from '../lib/config';
       import('qrcode').then(async (QRCode) => {
         if (!view.isConnected) return;
         const canvas = view.querySelector<HTMLCanvasElement>('#qr-canvas')!;
-        await QRCode.toCanvas(canvas, uri, { width: 320, margin: 4, errorCorrectionLevel: 'H', color: { dark: '#000000', light: '#ffffff' } });
+        await QRCode.toCanvas(canvas, result.webUrl, { width: 320, margin: 4, errorCorrectionLevel: 'H', color: { dark: '#000000', light: '#ffffff' } });
         if (view.isConnected) view.querySelector<HTMLElement>('#invite-qr')!.hidden = false;
       }).catch(() => { status.textContent = 'QR не удалось показать. Откройте HTTPS-ссылку в приложении.'; });
     } else status.textContent = 'Приглашение слишком длинное для QR. Откройте HTTPS-ссылку в приложении.';
