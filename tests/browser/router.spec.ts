@@ -34,7 +34,7 @@ test('mobile menu supports routes, current page, Escape and repeated visits',asy
 test('router reinitializes different invitations without leaking previous state',async({page,context})=>{
  await context.grantPermissions(['clipboard-read','clipboard-write']);await page.goto('/invite/FirstCode');
  await expect(page.locator('#qr-canvas')).toBeVisible();await page.locator('#copy-invite').click();
- await page.locator('.brand').click();await expect(page.locator('h1')).toContainText('Мессенджер');
+ await page.locator('.brand').click();await expect(page.locator('h1')).toContainText('Разговоры');
  await page.goBack();await expect(page.locator('#copy-invite')).toBeVisible();await page.locator('#copy-invite').click();
  expect(await page.evaluate(()=>navigator.clipboard.readText())).toBe('stille://i/FirstCode');
  await page.goto('/invite/SecondCode');await page.locator('#copy-invite').click();expect(await page.evaluate(()=>navigator.clipboard.readText())).toBe('stille://i/SecondCode');
