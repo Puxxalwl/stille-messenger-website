@@ -1,0 +1,16 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import PageIntro from '../components/PageIntro.astro';
+import {site} from '../lib/config';
+---
+<Layout title="Скачать Stille для Android" canonical="/download/" description="APK Stille для Android. Требования, установка и обновления из GitHub Releases.">
+<Header/>
+<main id="main" tabindex="-1" class="document-page wrap">
+  <PageIntro label="Скачать" title="Stille для Android" description="Приложение распространяется через GitHub Releases. Скачайте APK и установите его на телефон."/>
+  <section class="release-block" aria-labelledby="release-heading"><div><h2 id="release-heading">Версия {site.version}</h2><p>Android 8.0 и новее · APK · Бесплатно</p><p class="small-copy">Текущий Android-клиент ориентирован на arm64. Проверьте совместимость устройства перед установкой.</p></div><div class="release-actions"><a class="button" href={site.apk}>Скачать APK <span aria-hidden="true">↓</span></a><a href={`${site.android}/releases`} rel="noreferrer">Все версии и изменения ↗</a></div></section>
+  <div class="document-grid"><section class="prose" aria-labelledby="install-heading"><h2 id="install-heading">Установка</h2><ol class="instructions"><li><strong>Скачайте APK</strong><p>Используйте кнопку на этой странице. Файл загружается из официального репозитория Stille.</p></li><li><strong>Разрешите установку</strong><p>Откройте файл. Если Android попросит, разрешите вашему браузеру установку из этого источника. Название пункта зависит от версии Android.</p></li><li><strong>Откройте Stille</strong><p>Выберите имя, язык и тему. Затем обменяйтесь приглашением с собеседником.</p></li></ol><a class="text-link" href="/guide/">Руководство по первому запуску →</a></section><aside class="side-note"><h3>Проверьте источник</h3><p>Скачивайте приложение из репозитория проекта. Не устанавливайте APK из случайных сообщений или зеркал.</p><p>Сайт указывает конкретную версию, а не обещает, что она всегда самая новая. Список публикаций доступен в GitHub Releases.</p></aside></div>
+  <section class="prose document-section" aria-labelledby="updates-heading"><h2 id="updates-heading">Обновления</h2><p>В приложении есть проверка обновлений из GitHub Releases. Автоматическую проверку можно отключить в настройках; ручная остаётся в разделе о Stille.</p><p>Не удаляйте приложение и не очищайте его данные для решения проблем с обновлением: можно потерять локальную идентичность и переписку. При ошибке подписи ознакомьтесь с примечаниями к релизу и сообщите о проблеме.</p><a href={`${site.android}/issues`} rel="noreferrer">Сообщить об ошибке установки ↗</a></section>
+</main><Footer/>
+</Layout>

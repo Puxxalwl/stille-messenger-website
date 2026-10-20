@@ -1,0 +1,54 @@
+---
+import '../styles/global.css';
+import { ClientRouter } from 'astro:transitions';
+interface Props { title?: string; description?: string; noindex?: boolean; canonical?: string; image?: string }
+const { title = 'Stille — мессенджер без номера телефона', description = 'P2P-мессенджер для Android. Выберите имя, обменяйтесь приглашением и начните разговор. Открытый код, без номера телефона.', noindex = false, canonical = '/', image = '/assets/og-home.png' } = Astro.props;
+---
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="referrer" content="no-referrer" />
+    <meta name="theme-color" content="#F7F7F9" />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <link rel="canonical" href={new URL(canonical, Astro.site)} />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png" />
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ru_RU" />
+    <meta property="og:site_name" content="Stille" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={new URL(canonical, Astro.site)} />
+    <meta property="og:image" content={new URL(image, Astro.site)} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Stille — разговоры между вами. Белая сова на светлом фоне." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <title>{title}</title>
+    <ClientRouter fallback="swap" />
+    <link rel="preload" href="/fonts/inter-cyrillic.woff2" as="font" type="font/woff2" crossorigin />
+    <script is:inline>
+      try { const t = localStorage.getItem('stille-theme'); if (t === 'dark' || t === 'light') document.documentElement.dataset.theme = t; } catch {}
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">К содержанию</a>
+    <slot />
+    <script>
+      const applyTheme = () => {
+        try {
+          const theme = localStorage.getItem('stille-theme');
+          if (theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme;
+        } catch {}
+      };
+      document.addEventListener('astro:before-swap', (event) => {
+        const theme = document.documentElement.dataset.theme;
+        if (theme) event.newDocument.documentElement.dataset.theme = theme;
+      });
+      document.addEventListener('astro:page-load', applyTheme);
+    </script>
+  </body>
+</html>

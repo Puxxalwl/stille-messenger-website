@@ -1,0 +1,28 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Phone from '../components/Phone.astro';
+import { site } from '../lib/config';
+---
+<Layout>
+  <Header />
+  <main id="main" tabindex="-1">
+    <section class="hero wrap" aria-labelledby="hero-heading">
+      <div class="hero-copy">
+        <p class="eyebrow">Stille для Android</p>
+        <h1 id="hero-heading">Мессенджер<br/>без номера<br/>телефона</h1>
+        <p class="hero-description">Выберите имя, обменяйтесь приглашением и начните переписку. Stille соединяет устройства напрямую, когда между ними доступен маршрут.</p>
+        <div class="hero-cta"><a class="button" href={site.apk}>Скачать для Android <span aria-hidden="true">↓</span></a><a class="text-link" href="/guide/">Как начать <span aria-hidden="true">→</span></a></div>
+        <p class="download-meta">Android 8.0+ · APK · v{site.version}<br/><a href="/download/">Установка и обновления</a></p>
+      </div>
+      <figure class="hero-preview"><div class="hero-art"><span class="orbit orbit-one" aria-hidden="true"></span><span class="orbit orbit-two" aria-hidden="true"></span><img class="hero-owl" src="/assets/owl.svg" width="184" height="199" alt="Белая сова — маскот Stille"/><div class="hero-phone"><Phone/></div></div><figcaption>Иллюстрация интерфейса.<br/>Имена и переписка вымышлены.</figcaption></figure>
+    </section>
+    <section class="start-section wrap" aria-labelledby="start-heading">
+      <div class="section-heading"><h2 id="start-heading">От имени — к переписке</h2><p>Номер телефона не нужен.<br/>Контакт начинается с приглашения.</p></div>
+      <div class="start-layout"><ol class="journey"><li><span class="step-number">1</span><div><h3>Выберите имя</h3><p>Укажите, как вас увидит собеседник. Язык и тему можно поменять в настройках.</p></div></li><li><span class="step-number">2</span><div><h3>Обменяйтесь приглашением</h3><p>Создайте одноразовый код в добавлении контакта. Отправьте ссылку или покажите QR.</p></div></li><li><span class="step-number">3</span><div><h3>Начните переписку</h3><p>После подтверждения соединения человек появится в контактах.</p></div></li></ol><aside class="invite-aside"><img src="/assets/owl-invite.svg" width="180" height="168" loading="lazy" alt="Сова Stille держит приглашение"/><p>Получили ссылку от друга?</p><a href="/guide/">Как принять приглашение →</a></aside></div>
+    </section>
+    <section class="network-section wrap" aria-labelledby="network-heading"><div><p class="eyebrow">О соединении</p><h2 id="network-heading">P2P — между<br/>устройствами</h2></div><div class="network-copy"><p>Stille не заменяет доступный маршрут между вами. Для приглашения без адреса нужна одна локальная сеть. В других сетях — доступный адрес или relay.</p><p>Это важно знать до установки: сайт не соединяет устройства и не проверяет действительность приглашений.</p><div class="inline-links"><a href="/guide/">Разобраться с подключением →</a><a href="/about/">О проекте и шифровании →</a></div></div></section>
+  </main>
+  <Footer />
+</Layout>

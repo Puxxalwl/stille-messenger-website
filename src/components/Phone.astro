@@ -1,0 +1,20 @@
+---
+interface Props { mode?: 'chat' | 'list' }
+const { mode = 'chat' } = Astro.props;
+---
+<div class:list={['phone', `phone-${mode}`]} role="img" aria-label={mode === 'chat' ? 'Иллюстрация чата Stille: друзья договариваются встретиться у реки' : 'Иллюстрация списка чатов Stille'}>
+  <div class="phone-status"><span>9:41</span><div class="phone-camera"></div><span>▴ ▮ ▰</span></div>
+  {mode === 'chat' ? <>
+    <div class="chat-top"><span class="back-arrow">‹</span><div class="avatar avatar-blue">А</div><div><strong>Аня</strong><small>в сети</small></div><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="m8 10 4 4 4-4"/></svg></div>
+    <div class="chat-body"><span class="chat-date">Сегодня</span><div class="bubble received">Пойдём к реке после работы?<time>18:24</time></div><div class="bubble sent">Да! Возьму термос.<time>18:25 <b>✓✓</b></time></div><div class="bubble received">Тогда на нашем месте :)<time>18:25</time></div><div class="bubble sent">Я уже на месте.<br/>Тут сегодня тихо.<time>18:27 <b>✓✓</b></time></div><div class="bubble received final-bubble">Скоро буду <span class="heart">♡</span><time>18:28</time></div></div>
+    <div class="chat-compose"><span>Сообщение</span><span class="compose-send">↑</span></div>
+  </> : <>
+    <div class="list-title">Чаты <span>⊕</span></div><div class="phone-search">⌕ <span>Поиск</span></div>
+    <div class="chat-row"><div class="avatar avatar-blue">А</div><div><strong>Аня</strong><p>Скоро буду ♡</p></div><small>18:28<span class="unread">1</span></small></div>
+    <div class="chat-row"><div class="avatar avatar-sage">М</div><div><strong>Миша</strong><p>Отлично, до завтра!</p></div><small>16:42</small></div>
+    <div class="chat-row"><div class="avatar avatar-peach">Л</div><div><strong>Лера</strong><p>✓✓ Спасибо за вечер</p></div><small>вчера</small></div>
+    <div class="list-empty"><img src="/assets/owl.svg" width="100" height="108" alt=""/><p>Все свои. Всё на месте.</p></div>
+    <div class="phone-tabs"><span>♙<small>Профиль</small></span><span class="selected">▤<small>Чаты</small></span><span>♧<small>Контакты</small></span><span>⚙<small>Настройки</small></span></div>
+  </>}
+  <div class="phone-home"></div>
+</div>
