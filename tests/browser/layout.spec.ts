@@ -18,6 +18,8 @@ test('indexable pages have canonicals and JSON-LD; invite routes stay noindex',a
   for(const [route,canonical] of [['/','https://stille.im/'],['/download/','https://stille.im/download/'],['/guide/','https://stille.im/guide/'],['/about/','https://stille.im/about/']]){
    const response=await request.get(route);expect(response.status()).toBe(200);const html=await response.text();
    expect(html).toContain('name="robots" content="index, follow');expect(html).toContain(`rel="canonical" href="${canonical}"`);expect(html).toContain('type="application/ld+json"');
+   const title=html.match(/<title>(.*?)<\/title>/)?.[1];const description=html.match(/<meta name="description" content="([^"]+)"/)?.[1];expect(title?.length).toBeGreaterThan(0);expect(description?.length).toBeGreaterThan(40);
+   const jsonLd=html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)?.[1];expect(jsonLd).toBeTruthy();const data=JSON.parse(jsonLd!);expect(data['@context']).toBe('https://schema.org');expect(data['@graph'].some((item:{'@type':string})=>['WebPage','AboutPage'].includes(item['@type']))).toBe(true);
   }
   for(const route of ['/invite/','/invite/i/ProfileCode']){const response=await request.get(route);const html=await response.text();expect(html).toContain('name="robots" content="noindex, nofollow"');expect(html).not.toContain('application/ld+json');}
   const robots=await (await request.get('/robots.txt')).text();expect(robots).toContain('Sitemap: https://stille.im/sitemap-index.xml');
