@@ -1,67 +1,170 @@
 ---
 import { site } from '../lib/config';
+interface Props { lang?: 'ru' | 'en' }
+const { lang = 'ru' } = Astro.props;
+const english = lang === 'en';
 ---
-<div id="invite-view" class="invite-card" data-deep-links={String(site.deepLinksEnabled)} hidden>
-  <img id="invite-owl" src="/assets/owl-invite.svg" width="180" height="168" alt="Сова с конвертом" />
-  <p class="eyebrow">ОДИН ЧЕЛОВЕК. ОДНО ПРИГЛАШЕНИЕ.</p>
-  <h1 id="invite-title">Вас пригласили в Stille</h1>
-  <p id="invite-description">Хороший разговор начинается с «привет». Откройте приглашение в приложении.</p>
+<div id="invite-view" class="invite-card" data-lang={lang} data-version={site.version} data-apk={site.apk} hidden>
+  <img id="invite-owl" src="/assets/owl-invite.svg" width="180" height="168" alt={english ? 'Stille owl holding an invitation' : 'Сова Stille с приглашением'} />
+  <p class="eyebrow" id="invite-eyebrow">{english ? 'A NOTE FROM SOMEONE YOU KNOW' : 'ПРИГЛАШЕНИЕ В STILLE'}</p>
+  <h1 id="invite-title">{english ? 'You’re invited to Stille' : 'Вас пригласили в Stille'}</h1>
+  <p id="invite-description">{english ? 'Open the invitation in Stille to start a conversation.' : 'Откройте приглашение в Stille, чтобы начать переписку.'}</p>
   <p class="invite-status" id="invite-status" role="status" aria-live="polite"></p>
-  <div id="manual-copy-wrap" hidden><label class="manual-label" for="manual-copy">Выделите и скопируйте приглашение вручную</label><textarea class="manual-copy" id="manual-copy" readonly spellcheck="false" autocomplete="off"></textarea></div>
-  <div class="invite-instructions" id="invite-instructions"><strong>Как открыть приглашение</strong><ol><li>Откройте эту HTTPS-ссылку на Android с установленным Stille.</li><li>Android передаст полный код приложению автоматически.</li><li>Если приложение не открылось, считайте QR встроенным сканером Stille.</li></ol></div>
-  <div class="invite-qr" id="invite-qr" hidden><canvas id="qr-canvas" aria-label="QR приглашения для сканера Stille" role="img"></canvas><p>Откройте сканер в Stille на телефоне.<br/>Не отправляйте этот QR посторонним.</p></div>
-  <p class="invite-download">Ещё нет приложения? <a href={site.apk}>Скачать для Android · v{site.version} ↓</a></p>
-  <p class="invite-privacy" id="invite-privacy">Сайт не сохраняет и не проверяет приглашение. QR содержит эту же полную HTTPS-ссылку.</p>
-  <a class="invite-general-link" href="/">Что такое Stille ↗</a>
+  <div class="invite-actions"><a id="open-invite" class="button" href="" hidden></a></div>
+  <div id="manual-copy-wrap" hidden><label class="manual-label" id="manual-copy-label" for="manual-copy">{english ? 'Invite link' : 'Ссылка-приглашение'}</label><textarea class="manual-copy" id="manual-copy" readonly spellcheck="false" autocomplete="off" aria-label={english ? 'Full invite link' : 'Полная ссылка-приглашение'}></textarea><button class="button button-secondary copy-invite" id="copy-invite" type="button">{english ? 'Copy link' : 'Скопировать ссылку'}</button></div>
+  <div class="invite-instructions" id="invite-instructions"><strong id="invite-instructions-title">{english ? 'If Stille doesn’t open' : 'Если Stille не открылось'}</strong><ol id="invite-instructions-list"><li>{english ? 'Open Stille on Android.' : 'Откройте Stille на Android.'}</li><li>{english ? 'Choose Add contact and paste the full invite link, or scan its QR code in the app.' : 'Выберите «Добавить контакт» и вставьте полную ссылку или отсканируйте QR в приложении.'}</li></ol></div>
+  <div class="invite-qr" id="invite-qr" hidden><canvas id="qr-canvas" role="img" aria-label={english ? 'Invitation QR code for the Stille app' : 'QR-код приглашения для приложения Stille'}></canvas><p id="invite-qr-caption">{english ? 'Scan with Stille. Don’t share this code publicly.' : 'Отсканируйте код в Stille. Не публикуйте приглашение.'}</p></div>
+  <p class="invite-download" id="invite-download">{english ? 'Don’t have Stille yet?' : 'Ещё нет Stille?'} <a href={site.apk}>{english ? `Download for Android · v${site.version} ↓` : `Скачать для Android · v${site.version} ↓`}</a></p>
+  <p class="invite-privacy" id="invite-privacy">{english ? 'The site handles the invitation locally. It does not store the code or send it to a QR service. The URL is visible to the hosting provider and remains in browser history.' : 'Сайт обрабатывает приглашение локально: не сохраняет код и не отправляет его QR-сервисам. URL виден хостингу и остаётся в истории браузера.'}</p>
+  <a class="invite-general-link" id="invite-home" href={english ? '/en/' : '/'}>{english ? 'About Stille →' : 'О Stille →'}</a>
 </div>
-<noscript><div class="invite-card"><img src="/assets/owl-invite.svg" width="160" height="150" alt="Сова с приглашением"/><h1>Приглашения в Stille</h1><p>Откройте эту HTTPS-ссылку в установленном приложении Stille. Если приложение не установлено, скачайте его, затем используйте QR с полной HTTPS-ссылкой во встроенном сканере.</p><p>Если в адресе нет кода, попросите друга прислать полную ссылку.</p><p><a href={site.apk}>Скачать Stille для Android</a> · <a href="/">На главную</a></p></div></noscript>
+<noscript><div class="invite-card"><img src="/assets/owl-invite.svg" width="160" height="150" alt="Сова Stille с приглашением"/><h1>{english ? 'Stille invitation' : 'Приглашение в Stille'}</h1><p>{english ? 'Open this full HTTPS invite link on Android. If Stille does not open, use the app’s Add contact screen to paste the link or scan its QR code.' : 'Откройте полную ссылку-приглашение на Android. Если Stille не открылось, вставьте ссылку в разделе «Добавить контакт» или отсканируйте её QR-код.'}</p><p><a href={english ? '/en/download/' : '/download/'}>{english ? 'Download Stille for Android' : 'Скачать Stille для Android'}</a> · <a href={english ? '/en/' : '/'}>{english ? 'Home' : 'На главную'}</a></p></div></noscript>
 <script>
   import { parseInvitePath } from '../lib/invite.mjs';
   function setupInvite() {
-  const view = document.querySelector<HTMLDivElement>('#invite-view');
-  if (!view || view.dataset.ready) return;
-  view.dataset.ready = 'true';
-  const title = document.querySelector<HTMLElement>('#invite-title')!;
-  const description = document.querySelector<HTMLElement>('#invite-description')!;
-  const status = document.querySelector<HTMLElement>('#invite-status')!;
-  const result = parseInvitePath(window.location.pathname);
-  view.hidden = false;
-  if (result.kind === 'valid' && result.uri) {
-    document.title = 'Вас пригласили в Stille';
-    if (view.dataset.deepLinks === 'true') {
-      document.querySelector<HTMLElement>('#invite-privacy')!.textContent = 'Если Stille установлено, Android автоматически передаст ссылку приложению. Если приложение не открылось, используйте QR с полной HTTPS-ссылкой во встроенном сканере.';
-      // Android App Links open this HTTPS URL directly when assetlinks.json and
-      // the installed release certificate are configured. The page remains a
-      // useful fallback on desktop and on Android without the app.
-      if (/Android/i.test(navigator.userAgent)) {
-        window.setTimeout(() => {
-          if (document.visibilityState === 'visible' && view.isConnected) {
-            const intent = `intent://${window.location.host}${window.location.pathname}#Intent;scheme=https;package=com.stille.messenger;end`;
-            window.location.href = intent;
-          }
-        }, 120);
+    const view = document.querySelector<HTMLDivElement>('#invite-view');
+    if (!view || view.dataset.ready) return;
+    view.dataset.ready = 'true';
+    const language = window.location.pathname.startsWith('/en/') ? 'en' : view.dataset.lang || 'ru';
+    const english = language === 'en';
+    const text = {
+      en: {
+        title: 'You’re invited to Stille', missing: 'Page not found', invalid: 'This invitation link doesn’t look right', help: 'Invite someone to Stille',
+        description: 'Open the invitation in Stille to start a conversation.', missingDescription: 'This page may have moved, or the address may contain a typo.', invalidDescription: 'The code is missing or malformed. Ask the sender to share the full invitation link again.',
+        helpDescription: 'Create an invite in Stille and share its link or QR code. Received an invite? Open the full link on Android.',
+        open: 'Open in Stille', eyebrow: 'INVITATION TO STILLE', missingEyebrow: 'PAGE NOT FOUND', invalidEyebrow: 'INVITATION NOT RECOGNIZED',
+        privacy: 'The site handles the invitation locally. It does not store the code or send it to a QR service. The URL is visible to the hosting provider and remains in browser history.',
+        qrError: 'Could not create the QR code. Open the invite link on Android or use the Stille app’s Add contact screen.', qrLong: 'This invitation is too long for a QR code. Open the full link on Android.',
+        qrAlt: 'Invitation QR code for the Stille app', qrCaption: 'Scan with Stille. Don’t share this code publicly.',
+        downloadLabel: 'Don’t have Stille yet?', download: `Download for Android · v${view.dataset.version || ''} ↓`, home: 'About Stille →', guide: 'Invitation guide →',
+        helpTitle: 'If Stille doesn’t open', helpSteps: ['Open Stille on Android.', 'Choose Add contact and paste the full invite link, or scan its QR code in the app.'],
+        noCode: 'This link has no invite code. Ask the sender to share the full link.',
+      },
+      ru: {
+        title: 'Вас пригласили в Stille', missing: 'Страница не найдена', invalid: 'Ссылка-приглашение выглядит неверно', help: 'Пригласите знакомого в Stille',
+        description: 'Откройте приглашение в Stille, чтобы начать переписку.', missingDescription: 'Возможно, адрес указан с ошибкой или страница больше недоступна.', invalidDescription: 'Код отсутствует или повреждён. Попросите отправителя прислать полную ссылку ещё раз.',
+        helpDescription: 'Создайте приглашение в Stille и отправьте ссылку или QR. Получили приглашение? Откройте полную ссылку на Android.',
+        open: 'Открыть в Stille', eyebrow: 'ПРИГЛАШЕНИЕ В STILLE', missingEyebrow: 'СТРАНИЦА НЕ НАЙДЕНА', invalidEyebrow: 'ПРИГЛАШЕНИЕ НЕ РАСПОЗНАНО',
+        privacy: 'Сайт обрабатывает приглашение локально: не сохраняет код и не отправляет его QR-сервисам. URL виден хостингу и остаётся в истории браузера.',
+        qrError: 'Не удалось создать QR. Откройте ссылку на Android или вставьте её в разделе «Добавить контакт» приложения Stille.', qrLong: 'Приглашение слишком длинное для QR. Откройте полную ссылку на Android.',
+        qrAlt: 'QR-код приглашения для приложения Stille', qrCaption: 'Отсканируйте код в Stille. Не публикуйте приглашение.',
+        downloadLabel: 'Ещё нет Stille?', download: `Скачать для Android · v${view.dataset.version || ''} ↓`, home: 'О Stille →', guide: 'Как принять приглашение →',
+        helpTitle: 'Если Stille не открылось', helpSteps: ['Откройте Stille на Android.', 'Выберите «Добавить контакт» и вставьте полную ссылку или отсканируйте QR в приложении.'],
+        noCode: 'В этой ссылке нет кода приглашения. Попросите отправителя прислать полную ссылку.',
+      },
+    }[english ? 'en' : 'ru'];
+    document.documentElement.lang = english ? 'en' : 'ru';
+    document.querySelector<HTMLElement>('.skip-link')!.textContent = english ? 'Skip to content' : 'К содержанию';
+    const navigation = english
+      ? [{href:'/en/guide/',label:'Getting started'},{href:'/en/about/',label:'About'},{href:'/en/download/',label:'Download'}]
+      : [{href:'/guide/',label:'Как начать'},{href:'/about/',label:'О проекте'},{href:'/download/',label:'Скачать'}];
+    for (const selector of ['.desktop-nav','.mobile-menu nav']) {
+      document.querySelectorAll<HTMLAnchorElement>(`${selector} a`).forEach((link,index) => {
+        if (!navigation[index]) return;
+        link.href = navigation[index].href;
+        link.textContent = navigation[index].label;
+        if (window.location.pathname === navigation[index].href) link.setAttribute('aria-current','page');
+        else link.removeAttribute('aria-current');
+      });
+      const nav = document.querySelector<HTMLElement>(selector);
+      if (nav) nav.setAttribute('aria-label', english ? (selector === '.desktop-nav' ? 'Main navigation' : 'Mobile navigation') : (selector === '.desktop-nav' ? 'Основная навигация' : 'Мобильная навигация'));
+    }
+    const menuSummary = document.querySelector<HTMLElement>('.mobile-menu summary');
+    if (menuSummary) menuSummary.firstChild!.textContent = english ? 'Menu ' : 'Меню ';
+    const brand = document.querySelector<HTMLAnchorElement>('.brand');
+    brand?.setAttribute('aria-label', english ? 'Stille — home' : 'Stille — на главную');
+    const footerName = document.querySelector<HTMLElement>('.footer-name span');
+    if (footerName) footerName.textContent = english ? 'P2P messenger for Android' : 'P2P-мессенджер для Android';
+    const footerNav = document.querySelector<HTMLElement>('.site-footer nav');
+    if (footerNav) {
+      footerNav.setAttribute('aria-label', english ? 'Footer navigation' : 'Дополнительная навигация');
+      footerNav.querySelectorAll<HTMLAnchorElement>('a').forEach((link,index) => {
+        if (index < navigation.length) { link.href = navigation[index].href; link.textContent = navigation[index].label; }
+      });
+    }
+    const footerNote = document.querySelector<HTMLElement>('.footer-note');
+    if (footerNote) footerNote.textContent = english ? 'No analytics or ad trackers. Only your selected theme is stored in the browser. AGPL-3.0-or-later · Puxxalwl · EryynIT.' : 'Без аналитики и рекламных трекеров. В браузере сохраняется только выбранная тема. AGPL-3.0-or-later · Puxxalwl · EryynIT.';
+    const title = document.querySelector<HTMLElement>('#invite-title')!;
+    const description = document.querySelector<HTMLElement>('#invite-description')!;
+    const status = document.querySelector<HTMLElement>('#invite-status')!;
+    const eyebrow = document.querySelector<HTMLElement>('#invite-eyebrow')!;
+    const openInvite = document.querySelector<HTMLAnchorElement>('#open-invite')!;
+    const result = parseInvitePath(window.location.pathname);
+    view.hidden = false;
+    document.querySelector<HTMLImageElement>('#invite-owl')!.alt = english ? 'Stille owl holding an invitation' : 'Сова Stille с приглашением';
+    document.querySelector<HTMLElement>('#invite-instructions-title')!.textContent = text.helpTitle;
+    const instructionList = document.querySelector<HTMLOListElement>('#invite-instructions-list')!;
+    instructionList.replaceChildren(...text.helpSteps.map((step) => { const item = document.createElement('li'); item.textContent = step; return item; }));
+    document.querySelector<HTMLTextAreaElement>('#manual-copy')!.setAttribute('aria-label', english ? 'Full invite link' : 'Полная ссылка-приглашение');
+    document.querySelector<HTMLLabelElement>('#manual-copy-label')!.textContent = english ? 'Invite link' : 'Ссылка-приглашение';
+    const copyButton = document.querySelector<HTMLButtonElement>('#copy-invite')!;
+    copyButton.textContent = english ? 'Copy link' : 'Скопировать ссылку';
+    copyButton.addEventListener('click', async () => {
+      const input = document.querySelector<HTMLTextAreaElement>('#manual-copy')!;
+      try {
+        await navigator.clipboard.writeText(input.value);
+        status.textContent = english ? 'Invite link copied.' : 'Ссылка-приглашение скопирована.';
+      } catch {
+        input.focus();
+        input.select();
+        status.textContent = english ? 'Select and copy the link above.' : 'Выделите и скопируйте ссылку выше.';
+      }
+    });
+    document.querySelector<HTMLCanvasElement>('#qr-canvas')!.setAttribute('aria-label', text.qrAlt);
+    document.querySelector<HTMLElement>('#invite-qr-caption')!.textContent = text.qrCaption;
+    document.querySelector<HTMLElement>('#invite-privacy')!.textContent = text.privacy;
+    document.querySelector<HTMLElement>('#invite-download')!.firstChild!.textContent = `${text.downloadLabel} `;
+    const downloadLink = document.querySelector<HTMLAnchorElement>('#invite-download a')!;
+    downloadLink.href = view.dataset.apk!;
+    downloadLink.textContent = text.download;
+    const homeLink = document.querySelector<HTMLAnchorElement>('#invite-home')!;
+    homeLink.href = english ? '/en/' : '/';
+    homeLink.textContent = text.home;
+    const guideLink = document.querySelector<HTMLAnchorElement>('.invite-help-link a');
+    if (guideLink) { guideLink.href = english ? '/en/guide/' : '/guide/'; guideLink.textContent = text.guide; }
+    document.querySelector<HTMLAnchorElement>('.language-switch')?.setAttribute('lang', english ? 'ru' : 'en');
+    document.querySelector<HTMLAnchorElement>('.language-switch')?.setAttribute('aria-label', english ? 'Switch to Russian' : 'Switch to English');
+    const languageSwitch = document.querySelector<HTMLAnchorElement>('.language-switch');
+    if (languageSwitch) {
+      languageSwitch.textContent = english ? 'RU' : 'EN';
+      languageSwitch.href = english ? window.location.pathname.replace(/^\/en(?=\/)/, '') : `/en${window.location.pathname}`;
+    }
+    if (result.kind === 'valid' && result.uri) {
+      document.title = text.title;
+      title.textContent = text.title;
+      description.textContent = text.description;
+      eyebrow.textContent = text.eyebrow;
+      openInvite.href = result.uri;
+      openInvite.textContent = text.open;
+      openInvite.hidden = false;
+      const manualCopy = document.querySelector<HTMLTextAreaElement>('#manual-copy')!;
+      manualCopy.value = result.webUrl;
+      document.querySelector<HTMLElement>('#manual-copy-wrap')!.hidden = false;
+      if (result.qrAllowed) {
+        import('qrcode').then(async (QRCode) => {
+          if (!view.isConnected) return;
+          const canvas = view.querySelector<HTMLCanvasElement>('#qr-canvas')!;
+          await QRCode.toCanvas(canvas, result.webUrl, { width: 320, margin: 4, errorCorrectionLevel: 'H', color: { dark: '#000000', light: '#ffffff' } });
+          if (view.isConnected) view.querySelector<HTMLElement>('#invite-qr')!.hidden = false;
+        }).catch(() => { status.textContent = text.qrError; });
+      } else status.textContent = text.qrLong;
+    } else {
+      const help = result.kind === 'help';
+      title.textContent = help ? text.help : result.kind === 'missing' ? text.missing : text.invalid;
+      document.title = title.textContent + ' — Stille';
+      description.textContent = help ? text.helpDescription : result.kind === 'missing' ? text.missingDescription : text.invalidDescription;
+      if (!help) {
+        const owl = document.querySelector<HTMLImageElement>('#invite-owl')!;
+        owl.src = '/assets/owl-lost.svg';
+        owl.alt = english ? 'Stille owl looking for a lost page' : 'Сова Stille ищет потерянную страницу';
+        document.querySelector<HTMLElement>('#invite-instructions')!.hidden = true;
+        document.querySelector<HTMLElement>('#invite-privacy')!.hidden = true;
+        document.querySelector<HTMLElement>('#invite-download')!.hidden = true;
+        eyebrow.textContent = result.kind === 'missing' ? text.missingEyebrow : text.invalidEyebrow;
+      } else if (!['/invite/', '/invite', '/en/invite/', '/en/invite'].includes(window.location.pathname)) {
+        status.textContent = text.noCode;
       }
     }
-    if (result.qrAllowed) {
-      import('qrcode').then(async (QRCode) => {
-        if (!view.isConnected) return;
-        const canvas = view.querySelector<HTMLCanvasElement>('#qr-canvas')!;
-        await QRCode.toCanvas(canvas, result.webUrl, { width: 320, margin: 4, errorCorrectionLevel: 'H', color: { dark: '#000000', light: '#ffffff' } });
-        if (view.isConnected) view.querySelector<HTMLElement>('#invite-qr')!.hidden = false;
-      }).catch(() => { status.textContent = 'QR не удалось показать. Откройте HTTPS-ссылку в приложении.'; });
-    } else status.textContent = 'Приглашение слишком длинное для QR. Откройте HTTPS-ссылку в приложении.';
-  } else {
-    const help = result.kind === 'help';
-    title.textContent = help ? 'Позовите своего человека' : result.kind === 'missing' ? 'Здесь пока тихо' : 'В ссылке что-то не так';
-    document.title = help ? 'Приглашения в Stille' : result.kind === 'missing' ? 'Страница не найдена — Stille' : 'Некорректное приглашение — Stille';
-    description.textContent = help ? 'Создайте одноразовое приглашение в приложении и отправьте его другу. Получили приглашение? Откройте полную ссылку с кодом.' : result.kind === 'missing' ? 'Похоже, такой страницы нет. Возможно, в адрес закралась опечатка. Вернёмся к разговорам?' : 'Код отсутствует, повреждён или имеет неподдерживаемый формат. Попросите отправителя скопировать полную ссылку заново.';
-    if (!help) {
-      const owl = document.querySelector<HTMLImageElement>('#invite-owl')!; owl.src = '/assets/owl-lost.svg'; owl.alt = 'Сова ищет потерянную страницу';
-      document.querySelector<HTMLElement>('#invite-instructions')!.hidden = true;
-      document.querySelector<HTMLElement>('#invite-privacy')!.hidden = true;
-      document.querySelector<HTMLElement>('.invite-card .eyebrow')!.textContent = result.kind === 'missing' ? '404 / НЕ ТУДА СВЕРНУЛИ' : 'ПРИГЛАШЕНИЕ НЕ РАСПОЗНАНО';
-    }
-  }
   }
   document.addEventListener('astro:page-load', setupInvite);
 </script>

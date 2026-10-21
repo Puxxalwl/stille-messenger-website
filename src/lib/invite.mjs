@@ -5,9 +5,10 @@ const byteLength = (text) => new TextEncoder().encode(text).length;
 /** Codes are opaque URI suffixes, not destinations. Never decode twice. */
 export function parseInvitePath(pathname) {
   if (typeof pathname !== 'string') return { kind: 'missing' };
-  if (pathname === '/invite' || pathname === '/invite/') return { kind: 'help' };
-  if (!pathname.startsWith('/invite/')) return { kind: 'missing' };
-  let suffix = pathname.slice('/invite/'.length);
+  const invitePath = pathname.startsWith('/en/invite/') ? pathname.slice(3) : pathname;
+  if (invitePath === '/invite' || invitePath === '/invite/') return { kind: 'help' };
+  if (!invitePath.startsWith('/invite/')) return { kind: 'missing' };
+  let suffix = invitePath.slice('/invite/'.length);
   let namespace = 'i';
   // Persistent profile links carry the Android namespace in the web path.
   // Legacy /invite/{code} remains the one-time invite format.

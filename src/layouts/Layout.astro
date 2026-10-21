@@ -45,7 +45,7 @@ const schemas = indexable ? [
     <meta property="og:image" content={new URL(image, Astro.site)} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Stille — разговоры между вами. Белая сова на светлом фоне." />
+    <meta property="og:image:alt" content={lang === 'en' ? 'Stille — conversations between you. A white owl on a light background.' : 'Stille — разговоры между вами. Белая сова на светлом фоне.'} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
@@ -59,7 +59,7 @@ const schemas = indexable ? [
     </script>
   </head>
   <body>
-    <a class="skip-link" href="#main">К содержанию</a>
+    <a class="skip-link" href="#main">{lang === 'en' ? 'Skip to content' : 'К содержанию'}</a>
     <slot />
     <script>
       const applyTheme = () => {

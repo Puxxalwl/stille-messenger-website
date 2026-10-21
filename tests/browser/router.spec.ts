@@ -10,7 +10,7 @@ test('ClientRouter changes pages without document reload; theme and history surv
  expect(await page.evaluate(()=>(window as unknown as Record<string,unknown>).__navigationMarker)).toBe('same-document');
  await expect(page.locator('html')).toHaveAttribute('data-theme','dark');
  await expect(page.locator('.desktop-nav a[aria-current="page"]')).toHaveText('Как начать');
- await page.getByText('Ссылка сама откроет приложение?',{exact:true}).click();await expect(page.locator('details[open]')).toContainText('ещё не подключены');
+ await page.getByText('Ссылка сама откроет приложение?',{exact:true}).click();await expect(page.locator('details[open]')).toContainText('подтверждения домена');
  await page.locator('.desktop-nav').getByRole('link',{name:'О проекте'}).click();await expect(page).toHaveURL(/\/about\/$/);
  await page.locator('.desktop-nav').getByRole('link',{name:'Скачать',exact:true}).click();await expect(page).toHaveURL(/\/download\/$/);
  await page.getByRole('button',{name:'Включить светлую тему'}).click();await expect(page.locator('html')).toHaveAttribute('data-theme','light');
@@ -34,7 +34,7 @@ test('mobile menu supports routes, current page, Escape and repeated visits',asy
 test('router reinitializes different invitations without leaking previous state',async({page,context})=>{
  await context.grantPermissions(['clipboard-read','clipboard-write']);await page.goto('/invite/FirstCode');
  await expect(page.locator('#qr-canvas')).toBeVisible();
- await page.locator('.brand').click();await expect(page.locator('h1')).toContainText('Разговоры');
+ await page.locator('.brand').click();await expect(page.locator('h1')).toHaveText('Stille');await expect(page.locator('.hero-tagline')).toHaveText('Разговоры между вами');
  await page.goBack();await expect(page.locator('#invite-qr')).toBeVisible();
  await page.goto('/invite/SecondCode');await expect(page.locator('#invite-qr')).toBeVisible();
 });
@@ -45,7 +45,7 @@ test('all known routes return HTML 200 and navigation avoids hash routes',async(
 });
 
 test('English pages and language switcher are available',async({page})=>{
- await page.goto('/en/');await expect(page.locator('html')).toHaveAttribute('lang','en');await expect(page.locator('h1')).toContainText('Conversations');await expect(page.locator('.language-switch')).toHaveText('RU');await page.locator('.language-switch').click();await expect(page).toHaveURL(/\/$/);await expect(page.locator('html')).toHaveAttribute('lang','ru');await expect(page.locator('h1')).toContainText('Разговоры');
+ await page.goto('/en/');await expect(page.locator('html')).toHaveAttribute('lang','en');await expect(page.locator('h1')).toHaveText('Stille');await expect(page.locator('.hero-tagline')).toHaveText('Conversations between you');await expect(page.locator('.language-switch')).toHaveText('RU');await page.locator('.language-switch').click();await expect(page).toHaveURL(/\/$/);await expect(page.locator('html')).toHaveAttribute('lang','ru');await expect(page.locator('h1')).toHaveText('Stille');await expect(page.locator('.hero-tagline')).toHaveText('Разговоры между вами');
 });
 
 test('menu works without JavaScript',async({browser})=>{

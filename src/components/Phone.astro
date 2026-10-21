@@ -1,20 +1,41 @@
 ---
-interface Props { mode?: 'chat' | 'list' }
-const { mode = 'chat' } = Astro.props;
+interface Props { mode?: 'chat' | 'list'; lang?: 'ru' | 'en' }
+const { mode = 'chat', lang = 'ru' } = Astro.props;
+const L = {
+  chatLabel: {ru:'Иллюстрация чата Stille: друзья договариваются встретиться у реки',en:'Stille chat illustration: friends making plans'},
+  listLabel: {ru:'Иллюстрация списка чатов Stille',en:'Stille chat list illustration'},
+  today: {ru:'Сегодня',en:'Today'},
+  online: {ru:'в сети',en:'online'},
+  message: {ru:'Сообщение',en:'Message'},
+  search: {ru:'Поиск',en:'Search'},
+  tabs: [
+    {ru:'Профиль',en:'Profile'},
+    {ru:'Чаты',   en:'Chats'},
+    {ru:'Контакты',en:'Contacts'},
+    {ru:'Настройки',en:'Settings'},
+  ],
+  listEmpty: {ru:'Все свои. Всё на месте.',en:'Everyone here. Right where they belong.'},
+  // chat bubbles
+  chat: {
+    ru: ['Пойдём к реке после работы?','Да! Возьму термос.','Тогда на нашем месте :)','Я уже на месте.','Тут сегодня тихо.','Скоро буду'],
+    en: ['Walk to the river after work?','Yes! I\'ll bring tea.','Same spot as always :)','Already here.','It\'s so quiet today.','Be there soon'],
+  },
+} as const;
+const t = (v: {ru: string; en: string}) => v[lang];
 ---
-<div class:list={['phone', `phone-${mode}`]} role="img" aria-label={mode === 'chat' ? 'Иллюстрация чата Stille: друзья договариваются встретиться у реки' : 'Иллюстрация списка чатов Stille'}>
+<div class:list={['phone', `phone-${mode}`]} role="img" aria-label={t(mode === 'chat' ? L.chatLabel : L.listLabel)}>
   <div class="phone-status"><span>9:41</span><div class="phone-camera"></div><span>▴ ▮ ▰</span></div>
   {mode === 'chat' ? <>
-    <div class="chat-top"><span class="back-arrow">‹</span><div class="avatar avatar-blue">А</div><div><strong>Аня</strong><small>в сети</small></div><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="m8 10 4 4 4-4"/></svg></div>
-    <div class="chat-body"><span class="chat-date">Сегодня</span><div class="bubble received">Пойдём к реке после работы?<time>18:24</time></div><div class="bubble sent">Да! Возьму термос.<time>18:25 <b>✓✓</b></time></div><div class="bubble received">Тогда на нашем месте :)<time>18:25</time></div><div class="bubble sent">Я уже на месте.<br/>Тут сегодня тихо.<time>18:27 <b>✓✓</b></time></div><div class="bubble received final-bubble">Скоро буду <span class="heart">♡</span><time>18:28</time></div></div>
-    <div class="chat-compose"><span>Сообщение</span><span class="compose-send">↑</span></div>
+    <div class="chat-top"><span class="back-arrow">‹</span><div class="avatar avatar-blue">{lang==='en'?'A':'А'}</div><div><strong>{lang==='en'?'Anna':'Аня'}</strong><small>{t(L.online)}</small></div><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="m8 10 4 4 4-4"/></svg></div>
+    <div class="chat-body"><span class="chat-date">{t(L.today)}</span><div class="bubble received">{L.chat[lang][0]}<time>18:24</time></div><div class="bubble sent">{L.chat[lang][1]}<time>18:25 <b>✓✓</b></time></div><div class="bubble received">{L.chat[lang][2]}<time>18:25</time></div><div class="bubble sent">{L.chat[lang][3]}<br/>{L.chat[lang][4]}<time>18:27 <b>✓✓</b></time></div><div class="bubble received final-bubble">{L.chat[lang][5]} <span class="heart">♡</span><time>18:28</time></div></div>
+    <div class="chat-compose"><span>{t(L.message)}</span><span class="compose-send">↑</span></div>
   </> : <>
-    <div class="list-title">Чаты <span>⊕</span></div><div class="phone-search">⌕ <span>Поиск</span></div>
-    <div class="chat-row"><div class="avatar avatar-blue">А</div><div><strong>Аня</strong><p>Скоро буду ♡</p></div><small>18:28<span class="unread">1</span></small></div>
-    <div class="chat-row"><div class="avatar avatar-sage">М</div><div><strong>Миша</strong><p>Отлично, до завтра!</p></div><small>16:42</small></div>
-    <div class="chat-row"><div class="avatar avatar-peach">Л</div><div><strong>Лера</strong><p>✓✓ Спасибо за вечер</p></div><small>вчера</small></div>
-    <div class="list-empty"><img src="/assets/owl.svg" width="100" height="108" alt=""/><p>Все свои. Всё на месте.</p></div>
-    <div class="phone-tabs"><span>♙<small>Профиль</small></span><span class="selected">▤<small>Чаты</small></span><span>♧<small>Контакты</small></span><span>⚙<small>Настройки</small></span></div>
+    <div class="list-title">{t(L.tabs[1])} <span>⊕</span></div><div class="phone-search">⌕ <span>{t(L.search)}</span></div>
+    <div class="chat-row"><div class="avatar avatar-blue">{lang==='en'?'A':'А'}</div><div><strong>{lang==='en'?'Anna':'Аня'}</strong><p>{L.chat[lang][5]} ♡</p></div><small>18:28<span class="unread">1</span></small></div>
+    <div class="chat-row"><div class="avatar avatar-sage">{lang==='en'?'M':'М'}</div><div><strong>{lang==='en'?'Mike':'Миша'}</strong><p>{lang==='en'?'Great, see you tomorrow!':'Отлично, до завтра!'}</p></div><small>16:42</small></div>
+    <div class="chat-row"><div class="avatar avatar-peach">{lang==='en'?'L':'Л'}</div><div><strong>{lang==='en'?'Lena':'Лера'}</strong><p>✓✓ {lang==='en'?'Thanks for the evening':'Спасибо за вечер'}</p></div><small>{lang==='en'?'yesterday':'вчера'}</small></div>
+    <div class="list-empty"><img src="/assets/owl.svg" width="100" height="108" alt=""/><p>{t(L.listEmpty)}</p></div>
+    <div class="phone-tabs"><span>♙<small>{t(L.tabs[0])}</small></span><span class="selected">▤<small>{t(L.tabs[1])}</small></span><span>♧<small>{t(L.tabs[2])}</small></span><span>⚙<small>{t(L.tabs[3])}</small></span></div>
   </>}
   <div class="phone-home"></div>
 </div>

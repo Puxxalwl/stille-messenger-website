@@ -5,7 +5,7 @@ const links = english
   ? [{ href: '/en/guide/', label: 'Getting started' }, { href: '/en/about/', label: 'About' }, { href: '/en/download/', label: 'Download' }]
   : [{ href: '/guide/', label: 'Как начать' }, { href: '/about/', label: 'О проекте' }, { href: '/download/', label: 'Скачать' }];
 const home = english ? '/en/' : '/';
-const counterpart = path.startsWith('/invite/') ? (english ? '/' : '/en/') : english ? path.replace(/^\/en(?=\/|$)/, '') || '/' : `/en${path === '/' ? '/' : path}`;
+const counterpart = path.startsWith('/invite/') ? `/en${path}` : path.startsWith('/en/invite/') ? path.replace(/^\/en(?=\/)/, '') : english ? path.replace(/^\/en(?=\/|$)/, '') || '/' : `/en${path === '/' ? '/' : path}`;
 ---
 <header class="site-header wrap">
   <a href={home} class="brand" aria-label={english ? 'Stille — home' : 'Stille — на главную'}><img src="/assets/logo.webp" width="25" height="36" alt="" /><span>Stille</span></a>

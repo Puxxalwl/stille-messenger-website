@@ -1,7 +1,7 @@
 import { writeFile } from 'node:fs/promises';
 
 const repo = 'Puxxalwl/Stille-Messenger-Android';
-const fallback = { version: '3.2.0', apk: 'https://github.com/Puxxalwl/Stille-Messenger-Android/releases/download/v3.2.0/Stille-Messenger-v3.2.0.apk' };
+const fallback = { version: '3.4.0', apk: 'https://github.com/Puxxalwl/Stille-Messenger-Android/releases/download/v3.4.0/Stille-Messenger-v3.4.0.apk' };
 let releases;
 try {
   const response = await fetch(`https://api.github.com/repos/${repo}/releases?per_page=30`, { headers: { accept: 'application/vnd.github+json', 'user-agent': 'stille-messenger-website' } });
